@@ -1,0 +1,42 @@
+# ─── Core Framework ───────────────────────────────────────────────
+streamlit>=1.54.0
+
+# ─── NLP Libraries ────────────────────────────────────────────────
+nltk>=3.9.2
+spacy>=3.7.0
+scikit-learn>=1.8.0
+rake-nltk>=1.0.6
+
+# ─── Deep Learning / Transformers ─────────────────────────────────
+torch>=2.10.0
+transformers>=4.57.6
+sentence-transformers>=3.3.1
+
+# ─── Data & Numerics ──────────────────────────────────────────────
+numpy>=2.4.2
+pandas>=2.3.3
+
+# ─── Visualisation ────────────────────────────────────────────────
+matplotlib>=3.10.8
+plotly>=6.6.0
+altair>=6.0.0
+wordcloud>=1.9.0
+
+# ─── Document Parsing (Phase 2) ───────────────────────────────────
+PyMuPDF>=2.0.0          # PDF text extraction (replaces PyPDF2)
+python-docx>=1.1.0      # DOCX extraction
+python-pptx>=1.0.0      # PPTX extraction
+
+# ─── Summarisation helpers ────────────────────────────────────────
+sumy>=0.11.0
+rouge-score>=0.1.2
+
+# ─── Document Export & PDF Generation (Phase 5) ───────────────
+reportlab>=4.0.0
+
+# ─── Utilities ────────────────────────────────────────────────────
+python-dotenv>=1.0.0
+
+# ── Post-install commands ──────────────────────────────────────────
+# python -m spacy download en_core_web_sm
+# python -c "import nltk; nltk.download('punkt_tab'); nltk.download('stopwords'); nltk.download('averaged_perceptron_tagger_eng')"
