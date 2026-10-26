@@ -162,19 +162,20 @@ else:
                 orientation="h",
                 title=f"Top Keywords Ranked by {meth_label} Score",
                 color="Score",
-                color_continuous_scale=["#7c3aed", "#22d3ee"],
+                color_continuous_scale=["#6366f1", "#a855f7", "#06b6d4"],
                 template="plotly_dark",
             )
             fig.update_layout(
-                paper_bgcolor="#0d1117",
-                plot_bgcolor="#161b22",
-                font_color="#e6edf3",
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(15,23,42,0.5)",
+                font_color="#f1f5f9",
+                font_family="Plus Jakarta Sans, Inter, sans-serif",
                 title_font_size=14,
                 coloraxis_showscale=False,
                 margin=dict(l=10, r=20, t=40, b=10),
-                height=max(350, len(keywords) * 24),
+                height=max(360, len(keywords) * 26),
             )
-            fig.update_xaxes(showgrid=True, gridcolor="#30363d", range=[0, 1.05])
+            fig.update_xaxes(showgrid=True, gridcolor="rgba(255,255,255,0.06)", range=[0, 1.05])
             fig.update_yaxes(showgrid=False)
             st.plotly_chart(fig, use_container_width=True)
 
@@ -238,13 +239,14 @@ else:
                         values="Count",
                         title="Entity Distribution",
                         template="plotly_dark",
-                        color_discrete_sequence=["#7c3aed", "#22d3ee", "#10b981", "#f59e0b", "#f43f5e"],
+                        color_discrete_sequence=["#6366f1", "#06b6d4", "#10b981", "#f59e0b", "#f43f5e"],
                     )
                     fig_ent.update_layout(
-                        paper_bgcolor="#0d1117",
-                        plot_bgcolor="#161b22",
-                        font_color="#e6edf3",
-                        height=280,
+                        paper_bgcolor="rgba(0,0,0,0)",
+                        plot_bgcolor="rgba(15,23,42,0.5)",
+                        font_color="#f1f5f9",
+                        font_family="Plus Jakarta Sans, Inter, sans-serif",
+                        height=290,
                         margin=dict(l=10, r=10, t=40, b=10),
                     )
                     st.plotly_chart(fig_ent, use_container_width=True)

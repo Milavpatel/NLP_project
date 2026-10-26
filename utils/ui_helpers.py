@@ -2,9 +2,10 @@
 utils/ui_helpers.py
 ────────────────────
 Reusable Streamlit UI components used across all pages.
-No NLP logic lives here — only presentation helpers.
+Modern SaaS Academic Design System.
 """
 
+from __future__ import annotations
 import streamlit as st
 import os
 from pathlib import Path
@@ -20,87 +21,107 @@ def load_css() -> None:
         st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
 
-# ── Sidebar Builder ───────────────────────────────────────────────────────────
+# ── Step Button Helper ────────────────────────────────────────────────────────
+def _pipeline_step(num: str, label: str, done: bool = False, active: bool = False, page: str = "") -> None:
+    """Render a clickable pipeline step button using native Streamlit page_link for state preservation."""
+    page_files = {
+        "1": "pages/01_upload.py",
+        "2": "pages/02_summary.py",
+        "3": "pages/03_keywords.py",
+        "4": "pages/04_quiz.py",
+        "5": "pages/05_revision.py",
+        "6": "pages/06_nlp_analysis.py",
+    }
+    target = page if (page and page.endswith(".py")) else page_files.get(num, "app.py")
+    num_icons = {
+        "1": "1️⃣",
+        "2": "2️⃣",
+        "3": "3️⃣",
+        "4": "4️⃣",
+        "5": "5️⃣",
+        "6": "6️⃣",
+    }
+    icon = "✅" if done else num_icons.get(num, "🔹")
+    st.page_link(target, label=label, icon=icon)
+
+
+# ── Modern Sidebar Builder ────────────────────────────────────────────────────
 def render_sidebar(active_page: str = "") -> None:
-    """Render the sidebar with branding, pipeline status, and navigation."""
+    """Render the sidebar with branding, clickable pipeline buttons, and document stats."""
     from utils.session import (
-        has_text, has_summary, has_keywords, has_quiz, has_revision,
+        has_text, has_summary, has_keywords, has_quiz, has_tf, has_flashcards, has_revision,
         KEY_FILE_NAME, KEY_RAW_TEXT, reset_all
     )
 
     with st.sidebar:
-        # Brand
+        # Brand Header
         st.markdown("""
         <div class="nlp-sidebar-brand">
-            <div class="logo">📚</div>
-            <h3>NLP Summarizer</h3>
-            <p>Quiz Generator</p>
+            <div class="logo">⚡</div>
+            <h3>NLP Studio</h3>
+            <p>Academic Suite</p>
         </div>
         """, unsafe_allow_html=True)
 
-        # Pipeline progress
-        st.markdown("**Pipeline Status**")
-        _pipeline_step("1", "Upload Notes",    has_text(),    active_page == "upload")
-        _pipeline_step("2", "Summarization",   has_summary(), active_page == "summary")
-        _pipeline_step("3", "Keywords",        has_keywords(), active_page == "keywords")
-        _pipeline_step("4", "Quiz",            has_quiz(),    active_page == "quiz")
-        _pipeline_step("5", "Revision Sheet",  has_revision(), active_page == "revision")
-        _pipeline_step("6", "NLP Analysis",    False,         active_page == "nlp_analysis")
+        # Overview link
+        st.page_link("app.py", label="Overview Dashboard", icon="🏠")
+
+        st.markdown('<div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:0.06em; margin:0.8rem 0 0.5rem 0.2rem;">Pipeline Status</div>', unsafe_allow_html=True)
+
+        # 6 Clickable Pipeline Step Buttons (SPA routing preserves session state)
+        _pipeline_step("1", "Upload Notes",    has_text(),                                  active_page == "upload",       page="pages/01_upload.py")
+        _pipeline_step("2", "Summarization",   has_summary(),                               active_page == "summary",      page="pages/02_summary.py")
+        _pipeline_step("3", "Keywords",        has_keywords(),                              active_page == "keywords",     page="pages/03_keywords.py")
+        _pipeline_step("4", "Quiz & Practice", has_quiz() or has_tf() or has_flashcards(), active_page == "quiz",         page="pages/04_quiz.py")
+        _pipeline_step("5", "Revision Sheet",  has_revision(),                              active_page == "revision",     page="pages/05_revision.py")
+        _pipeline_step("6", "NLP Analysis",    False,                                       active_page == "nlp_analysis", page="pages/06_nlp_analysis.py")
 
         st.divider()
 
-        # Current file info
+        # Current Document Info
         fname = st.session_state.get(KEY_FILE_NAME)
         raw   = st.session_state.get(KEY_RAW_TEXT)
 
-        st.markdown("**Current Document**")
-        if fname:
+        st.markdown('<div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:#64748b; letter-spacing:0.06em; margin-bottom:0.5rem;">Current Document</div>', unsafe_allow_html=True)
+        if fname and raw:
+            words = len(raw.split())
+            read_time = max(1, round(words / 200))
             st.markdown(f"""
             <div class="nlp-sidebar-status">
-                <div class="status-label">File</div>
-                <div style="font-size:0.82rem; color:#e6edf3; word-break:break-all;">{fname}</div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+                    <span class="status-label">Active File</span>
+                    <span class="nlp-pulse"></span>
+                </div>
+                <div style="font-size:0.84rem; color:#f1f5f9; font-weight:600; word-break:break-all;">{fname}</div>
+                <div style="display:flex; gap:0.6rem; margin-top:0.4rem; font-size:0.76rem; color:#94a3b8;">
+                    <span><b>{words:,}</b> words</span>
+                    <span>·</span>
+                    <span>~<b>{read_time}</b> min read</span>
+                </div>
             </div>
             """, unsafe_allow_html=True)
-            if raw:
-                words = len(raw.split())
-                chars = len(raw)
-                col1, col2 = st.columns(2)
-                col1.metric("Words", f"{words:,}")
-                col2.metric("Chars", f"{chars:,}")
         else:
             st.markdown("""
             <div class="nlp-sidebar-status">
                 <div class="status-label">Status</div>
-                <div style="font-size:0.82rem; color:#8b949e;">No document loaded</div>
+                <div style="font-size:0.82rem; color:#64748b;">No document loaded</div>
             </div>
             """, unsafe_allow_html=True)
 
         st.divider()
 
         # Actions
-        if st.button("🗑️ Reset All Data", key="sidebar_reset", use_container_width=True):
+        if st.button("🗑️ Reset All Data", key="sidebar_reset", use_container_width=True, type="secondary"):
             reset_all()
-            st.success("All data cleared.")
+            st.success("All session data cleared.")
             st.rerun()
 
         st.markdown("""
-        <div style="text-align:center; padding-top:1rem;">
-            <div style="font-size:0.7rem; color:#484f58;">NLP Project · Phase 5</div>
-            <div style="font-size:0.7rem; color:#484f58;">Academic Dashboard</div>
+        <div style="text-align:center; padding-top:0.8rem;">
+            <div style="font-size:0.7rem; color:#64748b; font-weight:600;">✦ 100% Offline & Grounded</div>
+            <div style="font-size:0.65rem; color:#475569; margin-top:0.15rem;">Academic Intelligence Dashboard</div>
         </div>
         """, unsafe_allow_html=True)
-
-
-def _pipeline_step(num: str, label: str, done: bool, active: bool) -> None:
-    done_class   = "done"   if done   else ""
-    active_class = "active" if active else ""
-    icon = "✓" if done else num
-    st.markdown(f"""
-    <div class="nlp-step {done_class} {active_class}">
-        <div class="step-num">{icon}</div>
-        <div style="font-size:0.85rem; font-weight:500;">{label}</div>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 # ── Page Header ───────────────────────────────────────────────────────────────
@@ -125,13 +146,13 @@ def empty_state(
     html = f"""
     <div class="nlp-empty nlp-animate">
         <div class="icon">{icon}</div>
-        <h3>{title}</h3>
-        <p>{description}</p>
+        <h3 style="color:#ffffff; font-weight:700; font-size:1.25rem; margin-bottom:0.4rem;">{title}</h3>
+        <p style="color:#94a3b8; font-size:0.92rem; max-width:380px; margin:0 auto 1.25rem auto;">{description}</p>
     </div>
     """
     st.markdown(html, unsafe_allow_html=True)
     if cta_label and cta_page:
-        cols = st.columns([1, 2, 1])
+        cols = st.columns([1, 1.5, 1])
         with cols[1]:
             if st.button(cta_label, key=f"cta_{cta_page}", use_container_width=True):
                 st.switch_page(f"pages/{cta_page}.py")
@@ -158,7 +179,7 @@ def chip_row(items: list[str]) -> None:
     """Render a horizontal list of keyword chips."""
     chips_html = "".join(f'<span class="nlp-chip">{item}</span>' for item in items)
     st.markdown(
-        f'<div style="display:flex; flex-wrap:wrap; gap:0.25rem;">{chips_html}</div>',
+        f'<div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin:0.5rem 0;">{chips_html}</div>',
         unsafe_allow_html=True,
     )
 
@@ -177,10 +198,10 @@ def stat_row(stats: dict) -> None:
 # ── Divider with label ────────────────────────────────────────────────────────
 def section_divider(label: str) -> None:
     st.markdown(f"""
-    <div style="display:flex; align-items:center; gap:0.75rem; margin:1.25rem 0;">
-        <div style="flex:1; height:1px; background:#30363d;"></div>
-        <div style="font-size:0.75rem; color:#8b949e; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">{label}</div>
-        <div style="flex:1; height:1px; background:#30363d;"></div>
+    <div style="display:flex; align-items:center; gap:0.85rem; margin:1.75rem 0 1.25rem 0;">
+        <div style="flex:1; height:1px; background:rgba(255,255,255,0.08);"></div>
+        <div style="font-size:0.75rem; color:#64748b; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;">{label}</div>
+        <div style="flex:1; height:1px; background:rgba(255,255,255,0.08);"></div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -188,14 +209,14 @@ def section_divider(label: str) -> None:
 # ── Coming Soon Banner ────────────────────────────────────────────────────────
 def coming_soon_banner(feature: str) -> None:
     st.markdown(f"""
-    <div class="nlp-card nlp-animate" style="border-color:rgba(124,58,237,0.4);
-         background:rgba(124,58,237,0.06); text-align:center; padding:1rem;">
-        <span style="font-size:1.4rem;">🔜</span>
-        <div style="font-size:0.9rem; font-weight:600; color:#e6edf3; margin-top:0.4rem;">
-            {feature} — Coming in Phase 3
+    <div class="nlp-card nlp-animate" style="border-color:rgba(99,102,241,0.35);
+         background:rgba(99,102,241,0.08); text-align:center; padding:1.25rem;">
+        <span style="font-size:1.6rem;">🔜</span>
+        <div style="font-size:0.95rem; font-weight:700; color:#f1f5f9; margin-top:0.4rem;">
+            {feature} — Processing
         </div>
-        <div style="font-size:0.8rem; color:#8b949e; margin-top:0.25rem;">
-            Upload &amp; preprocessing is ready (Phase 2). NLP generation coming next.
+        <div style="font-size:0.82rem; color:#94a3b8; margin-top:0.25rem;">
+            Feature is actively integrated into the pipeline.
         </div>
     </div>
     """, unsafe_allow_html=True)

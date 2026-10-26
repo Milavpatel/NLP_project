@@ -103,20 +103,21 @@ else:
             y="Word Count",
             title="Word Count per Sentence Across Notes",
             color="Word Count",
-            color_continuous_scale=["#7c3aed", "#22d3ee"],
+            color_continuous_scale=["#6366f1", "#a855f7", "#06b6d4"],
             template="plotly_dark",
         )
         fig_sent.update_layout(
-            paper_bgcolor="#0d1117",
-            plot_bgcolor="#161b22",
-            font_color="#e6edf3",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(15,23,42,0.5)",
+            font_color="#f1f5f9",
+            font_family="Plus Jakarta Sans, Inter, sans-serif",
             title_font_size=13,
             coloraxis_showscale=False,
             margin=dict(l=10, r=10, t=35, b=10),
             height=260,
         )
         fig_sent.update_xaxes(showgrid=False)
-        fig_sent.update_yaxes(gridcolor="#30363d")
+        fig_sent.update_yaxes(gridcolor="rgba(255,255,255,0.06)")
         st.plotly_chart(fig_sent, use_container_width=True)
 
     # ── Section 3: In-Depth Linguistic Tabs ────────────────────────────────────
@@ -146,18 +147,19 @@ else:
                 x="Category",
                 y="Count",
                 color="Category",
-                color_discrete_sequence=["#7c3aed", "#9f67ff", "#22d3ee", "#10b981", "#f59e0b", "#f43f5e", "#64748b"],
+                color_discrete_sequence=["#6366f1", "#818cf8", "#06b6d4", "#10b981", "#f59e0b", "#f43f5e", "#64748b"],
                 template="plotly_dark",
             )
             fig_pos.update_layout(
-                paper_bgcolor="#0d1117",
-                plot_bgcolor="#161b22",
-                font_color="#e6edf3",
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(15,23,42,0.5)",
+                font_color="#f1f5f9",
+                font_family="Plus Jakarta Sans, Inter, sans-serif",
                 showlegend=False,
                 height=300,
                 margin=dict(l=10, r=10, t=30, b=10),
             )
-            fig_pos.update_yaxes(gridcolor="#30363d")
+            fig_pos.update_yaxes(gridcolor="rgba(255,255,255,0.06)")
             st.plotly_chart(fig_pos, use_container_width=True)
 
             total_pos = sum(pos_counts.values())
@@ -183,18 +185,19 @@ else:
                 y="Term",
                 orientation="h",
                 color="Occurrences",
-                color_continuous_scale=["#7c3aed", "#22d3ee"],
+                color_continuous_scale=["#6366f1", "#a855f7", "#06b6d4"],
                 template="plotly_dark",
             )
             fig_wf.update_layout(
-                paper_bgcolor="#0d1117",
-                plot_bgcolor="#161b22",
-                font_color="#e6edf3",
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(15,23,42,0.5)",
+                font_color="#f1f5f9",
+                font_family="Plus Jakarta Sans, Inter, sans-serif",
                 coloraxis_showscale=False,
                 height=350,
                 margin=dict(l=10, r=10, t=30, b=10),
             )
-            fig_wf.update_xaxes(gridcolor="#30363d")
+            fig_wf.update_xaxes(gridcolor="rgba(255,255,255,0.06)")
             st.plotly_chart(fig_wf, use_container_width=True)
         else:
             st.info("Not enough content words to build frequency distribution.")
@@ -208,7 +211,7 @@ else:
             import io
             import matplotlib.pyplot as plt
 
-            fig, ax = plt.subplots(figsize=(10, 5), facecolor="#0d1117")
+            fig, ax = plt.subplots(figsize=(10, 5), facecolor="#080c15")
             ax.imshow(wc, interpolation="bilinear")
             ax.axis("off")
             plt.tight_layout(pad=0)
@@ -246,13 +249,14 @@ else:
                         values="Count",
                         title="Entity Type Proportions",
                         template="plotly_dark",
-                        color_discrete_sequence=["#7c3aed", "#22d3ee", "#10b981", "#f59e0b", "#f43f5e"],
+                        color_discrete_sequence=["#6366f1", "#06b6d4", "#10b981", "#f59e0b", "#f43f5e"],
                     )
                     fig_e.update_layout(
-                        paper_bgcolor="#0d1117",
-                        plot_bgcolor="#161b22",
-                        font_color="#e6edf3",
-                        height=280,
+                        paper_bgcolor="rgba(0,0,0,0)",
+                        plot_bgcolor="rgba(15,23,42,0.5)",
+                        font_color="#f1f5f9",
+                        font_family="Plus Jakarta Sans, Inter, sans-serif",
+                        height=290,
                         margin=dict(l=10, r=10, t=30, b=10),
                     )
                     st.plotly_chart(fig_e, use_container_width=True)

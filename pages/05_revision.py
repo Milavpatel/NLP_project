@@ -18,6 +18,8 @@ from utils.session import (
     KEY_ENTITIES,
     KEY_NLP_STATS,
     KEY_QUIZ_ITEMS,
+    KEY_TF_ITEMS,
+    KEY_FLASHCARDS,
     KEY_SENTENCES,
 )
 from utils.ui_helpers import (
@@ -38,7 +40,7 @@ from core.revision_builder import (
 from core.text_processor import get_basic_stats, split_sentences
 from core.summarizer import summarize_text
 from core.keyword_extractor import tfidf_keywords, spacy_entities
-from core.quiz_generator import generate_mcq
+from core.quiz_generator import generate_mcq, generate_true_false, generate_flashcards
 
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -75,6 +77,8 @@ else:
     keyword_method = st.session_state.get(KEY_KEYWORD_METHOD, "tfidf")
     entities = st.session_state.get(KEY_ENTITIES, [])
     quiz_items = st.session_state.get(KEY_QUIZ_ITEMS, [])
+    tf_items = st.session_state.get(KEY_TF_ITEMS, [])
+    flashcards = st.session_state.get(KEY_FLASHCARDS, [])
     stats = st.session_state.get(KEY_NLP_STATS)
 
     if not stats:
@@ -153,10 +157,16 @@ else:
                     if not entities:
                         ents = spacy_entities(raw)
                         st.session_state[KEY_ENTITIES] = ents
+                    curr_kws = st.session_state.get(KEY_KEYWORDS, [])
                     if not quiz_items:
-                        curr_kws = st.session_state.get(KEY_KEYWORDS, [])
                         mcqs = generate_mcq(sentences, curr_kws if curr_kws else None, n=5, raw_text=raw)
                         st.session_state[KEY_QUIZ_ITEMS] = mcqs
+                    if not tf_items:
+                        tfs = generate_true_false(sentences, curr_kws if curr_kws else None, n=5, raw_text=raw)
+                        st.session_state[KEY_TF_ITEMS] = tfs
+                    if not flashcards:
+                        fcs = generate_flashcards(sentences, curr_kws if curr_kws else None, n=10, raw_text=raw)
+                        st.session_state[KEY_FLASHCARDS] = fcs
                 st.success("Complete revision sheet assembled!")
                 st.rerun()
 
@@ -165,6 +175,8 @@ else:
     keywords = st.session_state.get(KEY_KEYWORDS, [])
     entities = st.session_state.get(KEY_ENTITIES, [])
     quiz_items = st.session_state.get(KEY_QUIZ_ITEMS, [])
+    tf_items = st.session_state.get(KEY_TF_ITEMS, [])
+    flashcards = st.session_state.get(KEY_FLASHCARDS, [])
 
     # Assemble revision sheet instance
     sheet: RevisionSheet = assemble_revision_sheet(
@@ -176,6 +188,8 @@ else:
         entities=entities,
         stats=stats,
         quiz_items=quiz_items,
+        tf_items=tf_items,
+        flashcards=flashcards,
         raw_text=raw,
     )
 
@@ -300,7 +314,35 @@ else:
     else:
         st.info("Practice questions not yet generated. Use the quick generator above or visit the Quiz page.", icon="ℹ️")
 
-    # ── Section 6: Multi-Format Exports ───────────────────────────────────────
+    # ── Section 6: True / False Practice ─────────────────────────────────────
+    if sheet.tf_items:
+        st.markdown("#### ⚖️ 6. True / False Practice Assertions")
+        tf_table_data = []
+        for idx, item in enumerate(sheet.tf_items, start=1):
+            tf_table_data.append({
+                "#": idx,
+                "Statement": item.get("statement", ""),
+                "Expected": "True" if item.get("correct_answer") else "False",
+                "Explanation": item.get("explanation", ""),
+            })
+        st.dataframe(pd.DataFrame(tf_table_data), use_container_width=True, hide_index=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── Section 7: Key Concept Flashcards ────────────────────────────────────
+    if sheet.flashcards:
+        st.markdown("#### 📇 7. Key Concept Study Flashcards")
+        fc_table_data = []
+        for idx, fc in enumerate(sheet.flashcards, start=1):
+            fc_table_data.append({
+                "#": idx,
+                "Concept / Term": fc.get("term", ""),
+                "Category": fc.get("category", "Concept"),
+                "Definition / Notes Statement": fc.get("definition", ""),
+            })
+        st.dataframe(pd.DataFrame(fc_table_data), use_container_width=True, hide_index=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+    # ── Section 8: Multi-Format Exports ───────────────────────────────────────
     section_divider("Export Revision Guide")
 
     st.markdown("Download your complete revision sheet in your preferred format:")

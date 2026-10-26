@@ -1,408 +1,911 @@
 /* ================================================================
-   NLP Dashboard — Custom CSS
-   Academic theme: deep navy + electric violet + soft white
+   NLP Studio — Ultra-Modern SaaS Academic Theme
+   Theme: Obsidian Void + Electric Indigo/Violet + Ambient Glass
    ================================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-/* ── Root Tokens ─────────────────────────────────────────── */
+/* ── Root Design System Tokens ───────────────────────────── */
 :root {
-    --bg-primary:     #0d1117;
-    --bg-secondary:   #161b22;
-    --bg-card:        #1c2333;
-    --bg-hover:       #21262d;
-    --accent-violet:  #7c3aed;
-    --accent-violet2: #9f67ff;
-    --accent-cyan:    #22d3ee;
-    --accent-green:   #10b981;
+    --bg-base:        #080c15;
+    --bg-surface:     #0e1424;
+    --bg-card:        rgba(15, 23, 42, 0.72);
+    --bg-card-hover:  rgba(30, 41, 59, 0.85);
+    --bg-glass:       rgba(15, 23, 42, 0.55);
+    --bg-input:       rgba(15, 23, 42, 0.8);
+    
+    --primary:        #6366f1;
+    --primary-light:  #818cf8;
+    --secondary:      #a855f7;
+    --secondary-light:#c084fc;
+    --accent-cyan:    #06b6d4;
+    --accent-emerald: #10b981;
     --accent-amber:   #f59e0b;
     --accent-rose:    #f43f5e;
-    --text-primary:   #e6edf3;
-    --text-muted:     #8b949e;
-    --text-dim:       #484f58;
-    --border:         #30363d;
-    --shadow-glow:    0 0 24px rgba(124, 58, 237, 0.25);
-    --radius:         12px;
-    --radius-sm:      8px;
-    --radius-lg:      20px;
-    --font-main:      'Inter', -apple-system, sans-serif;
+    
+    --grad-primary:   linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+    --grad-surface:   linear-gradient(145deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.8) 100%);
+    --grad-hero:      radial-gradient(ellipse at 80% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 60%),
+                      radial-gradient(ellipse at 10% 100%, rgba(168, 85, 247, 0.14) 0%, transparent 50%),
+                      linear-gradient(145deg, #0f172a 0%, #090d16 100%);
+
+    --text-pure:      #ffffff;
+    --text-primary:   #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted:     #64748b;
+    --text-dim:       #475569;
+    
+    --border-subtle:  rgba(255, 255, 255, 0.07);
+    --border-medium:  rgba(255, 255, 255, 0.14);
+    --border-glow:    rgba(99, 102, 241, 0.45);
+    
+    --shadow-sm:      0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-md:      0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-lg:      0 16px 40px rgba(0, 0, 0, 0.55);
+    --shadow-glow:    0 0 25px rgba(99, 102, 241, 0.28);
+    --shadow-cyan:    0 0 25px rgba(6, 182, 212, 0.25);
+    
+    --radius-xs:      6px;
+    --radius-sm:      10px;
+    --radius-md:      14px;
+    --radius-lg:      22px;
+    --radius-pill:    9999px;
+    
+    --font-heading:   'Plus Jakarta Sans', -apple-system, sans-serif;
+    --font-body:      'Inter', -apple-system, sans-serif;
     --font-mono:      'JetBrains Mono', monospace;
-    --transition:     0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --ease-out:       cubic-bezier(0.16, 1, 0.3, 1);
+    --transition:     0.24s var(--ease-out);
 }
 
-/* ── Global Base ─────────────────────────────────────────── */
+/* ── Global Typography & Reset ───────────────────────────── */
 html, body, [class*="css"] {
-    font-family: var(--font-main) !important;
+    font-family: var(--font-body) !important;
     color: var(--text-primary) !important;
+    letter-spacing: -0.01em;
 }
 
-/* Main app background */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading) !important;
+    letter-spacing: -0.025em !important;
+    font-weight: 700 !important;
+}
+
+/* ── App Canvas Background with Ambient Glows ────────────── */
 .stApp {
-    background: var(--bg-primary) !important;
+    background-color: var(--bg-base) !important;
+    background-image: 
+        radial-gradient(circle at 12% 15%, rgba(99, 102, 241, 0.09) 0%, transparent 40%),
+        radial-gradient(circle at 88% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.04) 0%, transparent 60%) !important;
+    background-attachment: fixed !important;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-secondary); }
-::-webkit-scrollbar-thumb { background: var(--accent-violet); border-radius: 3px; }
+/* ── Custom Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-pill);
+    border: 2px solid transparent;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-light);
+}
 
-/* ── Sidebar ─────────────────────────────────────────────── */
+/* ── Clean Up Streamlit Header & Deploy Artifacts ────────── */
+[data-testid="stHeader"] {
+    background: transparent !important;
+    backdrop-filter: blur(12px) !important;
+}
+#MainMenu { visibility: hidden !important; }
+footer    { visibility: hidden !important; }
+.viewerBadge_container__1QSob { display: none !important; }
+
+/* ── HIDE Default Rookie Sidebar Navigation ───────────────── */
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+
+/* ── Sleek Sidebar Shell ─────────────────────────────────── */
 [data-testid="stSidebar"] {
-    background: var(--bg-secondary) !important;
-    border-right: 1px solid var(--border) !important;
+    background: rgba(10, 15, 28, 0.88) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-right: 1px solid var(--border-subtle) !important;
 }
 
-[data-testid="stSidebar"] * {
-    color: var(--text-primary) !important;
+[data-testid="stSidebar"] [data-testid="stVerticalBlock"] {
+    gap: 0.6rem !important;
 }
 
-[data-testid="stSidebarNav"] a {
+/* ── Sidebar Navigation Page Links (Modern SaaS Button Cards) ───── */
+div[data-testid="stPageLink-NavLink"] {
+    background: rgba(15, 23, 42, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: var(--radius-sm) !important;
-    transition: background var(--transition) !important;
+    padding: 0.65rem 0.95rem !important;
+    margin: 0.28rem 0 !important;
+    transition: all var(--transition) !important;
+    display: flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25) !important;
 }
 
-[data-testid="stSidebarNav"] a:hover {
-    background: var(--bg-hover) !important;
+div[data-testid="stPageLink-NavLink"] a {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.55rem !important;
+    width: 100% !important;
+}
+
+div[data-testid="stPageLink-NavLink"]:hover {
+    background: rgba(99, 102, 241, 0.16) !important;
+    border-color: rgba(99, 102, 241, 0.45) !important;
+    transform: translateX(3px) !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25) !important;
+}
+
+div[data-testid="stPageLink-NavLink"] span,
+div[data-testid="stPageLink-NavLink"] p {
+    font-size: 0.88rem !important;
+    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    letter-spacing: -0.01em !important;
+}
+
+div[data-testid="stPageLink-NavLink"]:hover span,
+div[data-testid="stPageLink-NavLink"]:hover p {
+    color: #ffffff !important;
+}
+
+div[data-testid="stPageLink-NavLink"][aria-current="page"] {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.14) 100%) !important;
+    border: 1px solid rgba(99, 102, 241, 0.65) !important;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+div[data-testid="stPageLink-NavLink"][aria-current="page"] span,
+div[data-testid="stPageLink-NavLink"][aria-current="page"] p {
+    color: #ffffff !important;
+    font-weight: 700 !important;
 }
 
 /* ── Metric Cards ────────────────────────────────────────── */
 [data-testid="stMetric"] {
     background: var(--bg-card) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius) !important;
-    padding: 1rem 1.25rem !important;
-    transition: transform var(--transition), box-shadow var(--transition) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-top: 2px solid rgba(99, 102, 241, 0.6) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 1.15rem 1.35rem !important;
+    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition) !important;
 }
 
 [data-testid="stMetric"]:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: var(--shadow-glow) !important;
+    transform: translateY(-3px) !important;
+    border-top-color: var(--secondary) !important;
+    border-color: var(--border-medium) !important;
+    box-shadow: var(--shadow-md), var(--shadow-glow) !important;
+}
+
+[data-testid="stMetricLabel"] {
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: var(--text-secondary) !important;
 }
 
 [data-testid="stMetricValue"] {
-    color: var(--accent-violet2) !important;
-    font-size: 1.9rem !important;
-    font-weight: 700 !important;
+    font-family: var(--font-heading) !important;
+    background: linear-gradient(135deg, #ffffff 40%, var(--primary-light)) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    font-size: 2.1rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.03em !important;
 }
 
-/* ── Buttons ─────────────────────────────────────────────── */
+/* ── Interactive Buttons ─────────────────────────────────── */
 .stButton > button {
-    background: linear-gradient(135deg, var(--accent-violet), var(--accent-violet2)) !important;
-    color: #fff !important;
-    border: none !important;
+    background: var(--grad-primary) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
     border-radius: var(--radius-sm) !important;
+    font-family: var(--font-heading) !important;
     font-weight: 600 !important;
-    font-size: 0.9rem !important;
-    letter-spacing: 0.02em !important;
-    padding: 0.55rem 1.4rem !important;
+    font-size: 0.92rem !important;
+    letter-spacing: -0.01em !important;
+    padding: 0.62rem 1.5rem !important;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
     transition: all var(--transition) !important;
-    box-shadow: 0 2px 12px rgba(124, 58, 237, 0.35) !important;
+    cursor: pointer !important;
 }
 
 .stButton > button:hover {
-    transform: translateY(-2px) scale(1.02) !important;
-    box-shadow: 0 6px 24px rgba(124, 58, 237, 0.55) !important;
+    transform: translateY(-2px) scale(1.01) !important;
+    box-shadow: 0 8px 26px rgba(139, 92, 246, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
 }
 
 .stButton > button:active {
     transform: translateY(0) scale(0.98) !important;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3) !important;
 }
 
-/* Secondary button style */
+/* Secondary Button (Ghost/Glass) */
 .stButton > button[kind="secondary"] {
-    background: transparent !important;
-    border: 1px solid var(--border) !important;
+    background: rgba(30, 41, 59, 0.45) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--border-subtle) !important;
     color: var(--text-primary) !important;
     box-shadow: none !important;
 }
 
 .stButton > button[kind="secondary"]:hover {
-    border-color: var(--accent-violet) !important;
-    box-shadow: none !important;
+    background: rgba(30, 41, 59, 0.85) !important;
+    border-color: var(--border-glow) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* ── Input Fields ────────────────────────────────────────── */
+/* ── Modern File Uploader Dropzone ───────────────────────── */
+[data-testid="stFileUploader"] {
+    background: var(--bg-glass) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 2px dashed rgba(99, 102, 241, 0.35) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: 1.5rem 1.25rem !important;
+    transition: all var(--transition) !important;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: var(--primary-light) !important;
+    background: rgba(99, 102, 241, 0.05) !important;
+    box-shadow: 0 0 25px rgba(99, 102, 241, 0.15) !important;
+}
+
+[data-testid="stFileUploaderDropzone"] {
+    background: transparent !important;
+}
+
+/* ── Text Inputs & Text Areas ────────────────────────────── */
 .stTextInput > div > div > input,
 .stTextArea > div > div > textarea,
 .stSelectbox > div > div > div {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border) !important;
+    background: var(--bg-input) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid var(--border-subtle) !important;
     border-radius: var(--radius-sm) !important;
-    color: var(--text-primary) !important;
-    font-family: var(--font-main) !important;
+    color: var(--text-pure) !important;
+    font-family: var(--font-body) !important;
+    font-size: 0.92rem !important;
+    transition: all var(--transition) !important;
 }
 
 .stTextInput > div > div > input:focus,
 .stTextArea > div > div > textarea:focus {
-    border-color: var(--accent-violet) !important;
-    box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25) !important;
+    border-color: var(--primary-light) !important;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25) !important;
+    background: rgba(15, 23, 42, 0.95) !important;
 }
 
-/* ── File Uploader ───────────────────────────────────────── */
-[data-testid="stFileUploader"] {
-    background: var(--bg-card) !important;
-    border: 2px dashed var(--border) !important;
-    border-radius: var(--radius) !important;
-    transition: border-color var(--transition) !important;
-}
-
-[data-testid="stFileUploader"]:hover {
-    border-color: var(--accent-violet) !important;
-}
-
-/* ── Tabs ────────────────────────────────────────────────── */
+/* ── Segmented Tabs ──────────────────────────────────────── */
 .stTabs [data-baseweb="tab-list"] {
-    background: var(--bg-secondary) !important;
-    border-radius: var(--radius) !important;
-    padding: 4px !important;
-    gap: 4px !important;
-    border: 1px solid var(--border) !important;
+    background: rgba(15, 23, 42, 0.75) !important;
+    backdrop-filter: blur(16px) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 5px !important;
+    gap: 6px !important;
+    border: 1px solid var(--border-subtle) !important;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4) !important;
 }
 
 .stTabs [data-baseweb="tab"] {
     border-radius: var(--radius-sm) !important;
-    color: var(--text-muted) !important;
-    font-weight: 500 !important;
+    color: var(--text-secondary) !important;
+    font-family: var(--font-heading) !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    padding: 0.55rem 1.25rem !important;
+    border: 1px solid transparent !important;
     transition: all var(--transition) !important;
 }
 
+.stTabs [data-baseweb="tab"]:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
 .stTabs [aria-selected="true"] {
-    background: var(--accent-violet) !important;
-    color: #fff !important;
-    box-shadow: 0 2px 8px rgba(124, 58, 237, 0.4) !important;
+    background: var(--grad-primary) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
 }
 
-/* ── Progress Bar ────────────────────────────────────────── */
-.stProgress > div > div > div > div {
-    background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan)) !important;
-    border-radius: 4px !important;
-}
-
-/* ── Expander ────────────────────────────────────────────── */
-.streamlit-expanderHeader {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius-sm) !important;
-    color: var(--text-primary) !important;
-    font-weight: 500 !important;
-}
-
-/* ── Info / Warning / Error boxes ───────────────────────── */
-.stAlert {
-    border-radius: var(--radius-sm) !important;
-    border: 1px solid var(--border) !important;
-}
-
-/* ── DataFrames / Tables ─────────────────────────────────── */
+/* ── DataFrames & Table Wrappers ─────────────────────────── */
 [data-testid="stDataFrame"] {
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius) !important;
+    background: var(--bg-surface) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
     overflow: hidden !important;
+    box-shadow: var(--shadow-sm) !important;
 }
 
-/* ── Dividers ────────────────────────────────────────────── */
-hr {
-    border-color: var(--border) !important;
-    margin: 1.5rem 0 !important;
+/* ── Progress Indicators ─────────────────────────────────── */
+.stProgress > div > div > div > div {
+    background: var(--grad-primary) !important;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.5) !important;
+    border-radius: var(--radius-pill) !important;
 }
 
-/* ── Custom Component Classes ────────────────────────────── */
+/* ── Alerts & Notifications ──────────────────────────────── */
+.stAlert {
+    border-radius: var(--radius-md) !important;
+    backdrop-filter: blur(16px) !important;
+    border: 1px solid var(--border-subtle) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
 
-/* Hero banner */
+/* ════════════════════════════════════════════════════════════
+   BESPOKE CUSTOM COMPONENT CLASSES
+   ════════════════════════════════════════════════════════════ */
+
+/* Hero Banner */
 .nlp-hero {
-    background: linear-gradient(135deg, #1a0533 0%, #0d1117 50%, #0a1628 100%);
-    border: 1px solid var(--border);
+    background: var(--grad-hero);
+    border: 1px solid var(--border-subtle);
     border-radius: var(--radius-lg);
-    padding: 2.5rem 2rem;
-    margin-bottom: 1.5rem;
+    padding: 2.8rem 2.4rem;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.nlp-hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), rgba(217, 70, 239, 0.6), transparent);
+}
+
+.nlp-hero-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    padding: 0.3rem 0.85rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.nlp-hero h1 {
+    font-size: 2.5rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(135deg, #ffffff 40%, #c084fc 80%, #38bdf8 100%);
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    line-height: 1.18 !important;
+    margin-bottom: 0.8rem !important;
+}
+
+.nlp-hero p {
+    color: var(--text-secondary) !important;
+    font-size: 1.05rem !important;
+    line-height: 1.6 !important;
+    max-width: 760px;
+    margin: 0 !important;
+}
+
+/* Glass Card */
+.nlp-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.1rem;
+    box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.nlp-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: var(--shadow-md), 0 0 20px rgba(99, 102, 241, 0.12);
+}
+
+/* Feature Showcase Cards on Home Page */
+.nlp-feature-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.6rem 1.4rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all var(--transition);
     position: relative;
     overflow: hidden;
 }
 
-.nlp-hero::before {
-    content: '';
-    position: absolute;
-    top: -60%;
-    right: -20%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(124,58,237,0.18) 0%, transparent 70%);
-    pointer-events: none;
+.nlp-feature-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(99, 102, 241, 0.45);
+    box-shadow: var(--shadow-lg), 0 0 25px rgba(99, 102, 241, 0.18);
 }
 
-.nlp-hero h1 {
-    font-size: 2.2rem !important;
+.nlp-feature-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.nlp-feature-card h4 {
+    font-size: 1.15rem !important;
     font-weight: 700 !important;
-    background: linear-gradient(135deg, #fff 30%, var(--accent-violet2));
-    -webkit-background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    background-clip: text !important;
-    margin-bottom: 0.5rem !important;
-    line-height: 1.2 !important;
+    color: #ffffff !important;
+    margin: 0 0 0.5rem 0 !important;
 }
 
-.nlp-hero p {
-    color: var(--text-muted) !important;
-    font-size: 1rem !important;
-    margin: 0 !important;
+.nlp-feature-card p {
+    font-size: 0.88rem !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.55 !important;
+    margin: 0 0 1rem 0 !important;
 }
 
-/* Status badge */
+/* Workflow Step Card */
+.nlp-workflow-step {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.4rem 1.1rem;
+    text-align: center;
+    transition: all var(--transition);
+}
+
+.nlp-workflow-step:hover {
+    transform: translateY(-3px);
+    border-color: rgba(99, 102, 241, 0.35);
+    box-shadow: var(--shadow-md);
+}
+
+.nlp-step-number {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary-light);
+    margin-bottom: 0.3rem;
+}
+
+/* Status Badges */
 .nlp-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.25rem 0.75rem;
-    border-radius: 999px;
-    font-size: 0.78rem;
+    padding: 0.25rem 0.8rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.76rem;
     font-weight: 600;
     letter-spacing: 0.03em;
 }
 
-.nlp-badge-ready    { background: rgba(16,185,129,0.15); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
-.nlp-badge-pending  { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
-.nlp-badge-error    { background: rgba(244,63,94,0.15);  color: #f43f5e; border: 1px solid rgba(244,63,94,0.3);  }
-.nlp-badge-info     { background: rgba(34,211,238,0.15); color: #22d3ee; border: 1px solid rgba(34,211,238,0.3); }
+.nlp-badge-ready    { background: rgba(16, 185, 129, 0.14); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.35); }
+.nlp-badge-pending  { background: rgba(245, 158, 11, 0.14); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.35); }
+.nlp-badge-error    { background: rgba(244, 63, 94, 0.14);  color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.35); }
+.nlp-badge-info     { background: rgba(6, 182, 212, 0.14);  color: #38bdf8; border: 1px solid rgba(6, 182, 212, 0.35); }
 
-/* Card container */
-.nlp-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
+/* Sidebar Brand Header */
+.nlp-sidebar-brand {
+    padding: 1rem 0.5rem 1.25rem 0.5rem;
+    border-bottom: 1px solid var(--border-subtle);
     margin-bottom: 1rem;
-    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
-.nlp-card:hover {
-    border-color: rgba(124, 58, 237, 0.4);
-    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.12);
+.nlp-brand-flex {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
 }
 
-/* Empty state */
+.nlp-brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-sm);
+    background: var(--grad-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
+    flex-shrink: 0;
+}
+
+.nlp-brand-text h3 {
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+}
+
+.nlp-brand-text p {
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    color: var(--primary-light) !important;
+    letter-spacing: 0.08em !important;
+    text-transform: uppercase !important;
+    margin: 0.15rem 0 0 0 !important;
+}
+
+/* Sidebar Document Insight Card */
+.nlp-sidebar-doc-card {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem;
+    margin: 0.75rem 0;
+}
+
+.nlp-sidebar-doc-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+/* Sidebar Section Headers */
+.nlp-sidebar-section-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin: 1.2rem 0 0.5rem 0.5rem;
+}
+
+/* Page Header Standard */
+.nlp-page-header {
+    padding: 0.5rem 0 1.5rem 0;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 1.75rem;
+}
+
+.nlp-page-header h2 {
+    font-size: 1.85rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin-bottom: 0.35rem !important;
+}
+
+.nlp-page-header p {
+    color: var(--text-secondary) !important;
+    font-size: 0.95rem !important;
+    margin: 0 !important;
+}
+
+/* Chip Badge */
+.nlp-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.22rem 0.75rem;
+    background: rgba(99, 102, 241, 0.12);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    color: var(--primary-light);
+    font-weight: 500;
+    margin: 0.2rem;
+    transition: all var(--transition);
+}
+
+.nlp-chip:hover {
+    background: rgba(99, 102, 241, 0.25);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    color: #ffffff;
+}
+
+/* ── 3D Flashcards Styling ───────────────────────────────── */
+.flashcard-scene {
+    perspective: 1200px;
+    margin: 1.5rem auto;
+    max-width: 680px;
+}
+
+.flashcard-container {
+    background: var(--grad-surface);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 2.6rem 2.2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    transition: all var(--transition);
+}
+
+.flashcard-container:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow-lg), var(--shadow-glow);
+}
+
+.flashcard-back-container {
+    background: radial-gradient(ellipse at 50% 0%, rgba(6, 182, 212, 0.15) 0%, transparent 70%),
+                linear-gradient(145deg, #10172a 0%, #0c111e 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(6, 182, 212, 0.4);
+    border-radius: var(--radius-lg);
+    padding: 2.6rem 2.2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg), var(--shadow-cyan);
+    animation: fadeInUp 0.3s ease both;
+}
+
+.flashcard-badge {
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.85rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 1.1rem;
+    display: inline-block;
+}
+
+.badge-def {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--primary-light);
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.badge-concept {
+    background: rgba(6, 182, 212, 0.15);
+    color: var(--accent-cyan);
+    border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.badge-mastered {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent-emerald);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+/* True/False Cards */
+.tf-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.35rem 1.6rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid var(--primary);
+    transition: all var(--transition);
+}
+
+.tf-card:hover {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md), var(--shadow-glow);
+}
+
+.tf-status-true {
+    color: var(--accent-emerald) !important;
+    font-weight: 700;
+}
+
+.tf-status-false {
+    color: var(--accent-rose) !important;
+    font-weight: 700;
+}
+
+/* Progress Bar Container */
+.nlp-progress-wrap {
+    width: 100%;
+    height: 9px;
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    margin: 0.85rem 0;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.nlp-progress-bar {
+    height: 100%;
+    background: var(--grad-primary);
+    border-radius: var(--radius-pill);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.6);
+    transition: width 0.35s ease;
+}
+
+/* Empty State */
 .nlp-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3.5rem 2rem;
+    padding: 4rem 2rem;
     text-align: center;
-    border: 2px dashed var(--border);
+    background: rgba(15, 23, 42, 0.4);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-lg);
-    color: var(--text-muted);
-    margin: 1rem 0;
+    color: var(--text-secondary);
+    margin: 1.5rem 0;
 }
 
 .nlp-empty .icon {
     font-size: 3.5rem;
     margin-bottom: 1rem;
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
-.nlp-empty h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: var(--text-primary) !important;
-    margin-bottom: 0.5rem;
+/* Micro Animations */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0);    }
 }
 
-.nlp-empty p {
-    font-size: 0.88rem;
-    color: var(--text-muted) !important;
-    max-width: 320px;
-    line-height: 1.6;
+.nlp-animate {
+    animation: fadeInUp 0.38s ease both;
 }
 
-/* Step indicator */
-.nlp-step {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius-sm);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    margin-bottom: 0.5rem;
-    transition: all var(--transition);
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.4; transform: scale(0.9); }
 }
 
-.nlp-step.active {
-    border-color: var(--accent-violet);
-    background: rgba(124,58,237,0.08);
-}
-
-.nlp-step .step-num {
-    width: 28px;
-    height: 28px;
+.nlp-pulse {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
-    background: var(--accent-violet);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-    font-weight: 700;
-    flex-shrink: 0;
+    background: var(--accent-emerald);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.7);
+    animation: pulse 2s ease-in-out infinite;
 }
 
-.nlp-step.done .step-num {
-    background: var(--accent-green);
-}
-
-/* Page header */
-.nlp-page-header {
-    padding: 1rem 0 1.5rem 0;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 1.5rem;
-}
-
-.nlp-page-header h2 {
-    font-size: 1.6rem !important;
-    font-weight: 700 !important;
-    color: var(--text-primary) !important;
-    margin-bottom: 0.25rem !important;
-}
-
-.nlp-page-header p {
-    color: var(--text-muted) !important;
-    font-size: 0.92rem !important;
-    margin: 0 !important;
-}
-
-/* Sidebar branding */
+/* ── Sidebar Brand Header ────────────────────────────────── */
 .nlp-sidebar-brand {
     text-align: center;
     padding: 1.25rem 0.5rem 1rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 0.85rem;
 }
 
 .nlp-sidebar-brand .logo {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     line-height: 1;
+    margin-bottom: 0.35rem;
 }
 
 .nlp-sidebar-brand h3 {
-    font-size: 1rem !important;
+    font-size: 1.05rem !important;
     font-weight: 700 !important;
-    color: var(--text-primary) !important;
-    margin: 0.4rem 0 0.15rem 0 !important;
+    color: #ffffff !important;
+    margin: 0.35rem 0 0.15rem 0 !important;
 }
 
 .nlp-sidebar-brand p {
     font-size: 0.72rem !important;
-    color: var(--text-muted) !important;
+    color: var(--primary-light) !important;
     margin: 0 !important;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    font-weight: 600;
 }
 
-/* Sidebar status section */
+/* ── Step Indicator / Sidebar Step Buttons ───────────────── */
+.nlp-step {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: var(--radius-sm) !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-subtle) !important;
+    margin-bottom: 0.5rem !important;
+    transition: all var(--transition) !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+}
+
+.nlp-step:hover {
+    border-color: var(--primary) !important;
+    background: rgba(99, 102, 241, 0.14) !important;
+    transform: translateX(3px) !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2) !important;
+}
+
+.nlp-step.active {
+    border-color: var(--primary) !important;
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.12) 100%) !important;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.nlp-step .step-num {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: rgba(99, 102, 241, 0.25) !important;
+    border: 1px solid rgba(99, 102, 241, 0.5) !important;
+    color: var(--primary-light) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    flex-shrink: 0 !important;
+}
+
+.nlp-step.active .step-num {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.6) !important;
+}
+
+.nlp-step.done .step-num {
+    background: var(--accent-emerald) !important;
+    color: #ffffff !important;
+    border-color: rgba(16, 185, 129, 0.8) !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5) !important;
+}
+
+.nlp-step .step-label {
+    font-size: 0.88rem !important;
+    font-weight: 600 !important;
+    color: var(--text-primary) !important;
+}
+
+.nlp-step.active .step-label {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* ── Sidebar Status Card ─────────────────────────────────── */
 .nlp-sidebar-status {
-    padding: 0.75rem;
+    padding: 0.85rem;
     background: var(--bg-card);
     border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
+    border: 1px solid var(--border-subtle);
     margin: 0.75rem 0;
 }
 
@@ -410,113 +913,7 @@ hr {
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--text-dim);
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-}
-
-/* Keyword chip */
-.nlp-chip {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.2rem 0.65rem;
-    background: rgba(124,58,237,0.15);
-    border: 1px solid rgba(124,58,237,0.35);
-    border-radius: 999px;
-    font-size: 0.8rem;
-    color: var(--accent-violet2);
-    font-weight: 500;
-    margin: 0.2rem;
-    transition: all var(--transition);
-}
-
-.nlp-chip:hover {
-    background: rgba(124,58,237,0.3);
-    transform: scale(1.04);
-}
-
-/* Quiz option card */
-.quiz-option {
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-    transition: all var(--transition);
-    background: var(--bg-card);
-}
-
-.quiz-option:hover {
-    border-color: var(--accent-violet);
-    background: rgba(124,58,237,0.08);
-}
-
-/* Revision flashcard */
-.flashcard {
-    background: linear-gradient(135deg, var(--bg-card), var(--bg-hover));
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    text-align: center;
-    min-height: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: transform var(--transition), box-shadow var(--transition);
-}
-
-.flashcard:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-glow);
-}
-
-/* Stat pill */
-.nlp-stat-pill {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 0.5rem 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-}
-
-.nlp-stat-pill .value {
-    font-size: 1.1rem;
+    color: var(--text-muted);
     font-weight: 700;
-    color: var(--accent-violet2);
-    font-family: var(--font-mono);
-}
-
-/* Animate fade-in for main content */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0);    }
-}
-
-.nlp-animate {
-    animation: fadeInUp 0.4s ease both;
-}
-
-/* Pulse dot */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.4; }
-}
-
-.nlp-pulse {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent-green);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-/* ── Responsive tweaks ───────────────────────────────────── */
-@media (max-width: 768px) {
-    .nlp-hero h1 { font-size: 1.6rem !important; }
-    .nlp-hero    { padding: 1.75rem 1.25rem; }
+    margin-bottom: 0.4rem;
 }

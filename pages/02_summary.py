@@ -241,7 +241,10 @@ else:
         with st.expander("📊 View ROUGE Overlap vs Original Document", expanded=False):
             st.caption(
                 "ROUGE evaluates n-gram recall and longest common subsequence (LCS) overlap "
-                "between the generated summary and reference notes."
+                "between the generated summary and the original source text. "
+                "**Note on Methodology:** Comparing against the source document measures content "
+                "retention / source coverage. In academic benchmarking, ROUGE evaluates against "
+                "human-authored reference summaries."
             )
             rouge_scores = evaluate_rouge(raw, summary_text)
             rc1, rc2, rc3 = st.columns(3)

@@ -51,24 +51,21 @@ _ensure_nltk_data()
 
 # ── spaCy bootstrap ───────────────────────────────────────────────────────────
 _SPACY_NLP = None          # lazy-loaded
-_SPACY_AVAILABLE = None    # tri-state: None=unchecked, True/False
 
 def _get_spacy_nlp():
     """Return a loaded spaCy model, or None if unavailable."""
-    global _SPACY_NLP, _SPACY_AVAILABLE
-    if _SPACY_AVAILABLE is not None:
+    global _SPACY_NLP
+    if _SPACY_NLP is not None:
         return _SPACY_NLP
 
     try:
         import spacy
-        _SPACY_NLP = spacy.load("en_core_web_sm")
-        _SPACY_AVAILABLE = True
-    except OSError:
-        # Model not downloaded
-        _SPACY_AVAILABLE = False
-        _SPACY_NLP = None
-    except ImportError:
-        _SPACY_AVAILABLE = False
+        try:
+            _SPACY_NLP = spacy.load("en_core_web_sm")
+        except Exception:
+            # Fallback for Python 3.13 Cython tokenizer deserialization overflow
+            _SPACY_NLP = spacy.load("en_core_web_sm", exclude=["tokenizer"])
+    except Exception:
         _SPACY_NLP = None
 
     return _SPACY_NLP
@@ -133,17 +130,56 @@ def split_sentences(text: str) -> list[str]:
     """
     Split text into sentences using NLTK's punkt tokeniser.
     Falls back to regex-based splitting if NLTK data unavailable.
+    Gracefully handles multi-paragraph text, bulleted lists, and unpunctuated headings.
     """
     if not text.strip():
         return []
+
+    # 1. Normalize bullet characters into standard breaks
+    normalized = re.sub(r"^[ \t]*[•\*\-–—]\s*", "\n\n", text, flags=re.MULTILINE)
+
+    # 2. Split across paragraphs (double newlines)
+    blocks = [b.strip() for b in re.split(r"\n\s*\n+", normalized) if b.strip()]
+    if not blocks:
+        blocks = [text.strip()]
+
+    raw_sentences: list[str] = []
     try:
         from nltk.tokenize import sent_tokenize
-        sentences = sent_tokenize(text)
-        return [s.strip() for s in sentences if s.strip()]
-    except LookupError:
-        # Fallback: split on .  !  ?
-        parts = re.split(r"(?<=[.!?])\s+", text)
-        return [p.strip() for p in parts if p.strip()]
+        for block in blocks:
+            sub_lines = block.split("\n")
+            current_chunk: list[str] = []
+            for line in sub_lines:
+                line_str = line.strip()
+                if not line_str:
+                    continue
+                # If a line looks like an isolated short heading (< 8 words and no terminal punctuation)
+                if len(line_str.split()) <= 7 and not line_str.endswith((".", "!", "?", ";", ":")):
+                    if current_chunk:
+                        raw_sentences.extend(sent_tokenize(" ".join(current_chunk)))
+                        current_chunk = []
+                    # Keep heading as its own potential item if >= 3 words
+                    if len(line_str.split()) >= 3:
+                        raw_sentences.append(line_str)
+                else:
+                    current_chunk.append(line_str)
+            if current_chunk:
+                raw_sentences.extend(sent_tokenize(" ".join(current_chunk)))
+    except (LookupError, ImportError):
+        for block in blocks:
+            parts = re.split(r"(?<=[.!?])\s+", block)
+            raw_sentences.extend(parts)
+
+    cleaned_sentences: list[str] = []
+    for s in raw_sentences:
+        s_clean = s.strip()
+        # Clean leading bullet or numbering artifacts
+        s_clean = re.sub(r"^[•\*\-–—\s]+", "", s_clean)
+        s_clean = re.sub(r"^[0-9]+[\.\)]\s*", "", s_clean).strip()
+        if s_clean:
+            cleaned_sentences.append(s_clean)
+
+    return cleaned_sentences
 
 
 # ── 3. tokenise_words ─────────────────────────────────────────────────────────

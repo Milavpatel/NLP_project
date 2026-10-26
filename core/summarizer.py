@@ -1,23 +1,22 @@
 """
 core/summarizer.py
 ────────────────────
-Phase 3: Real Extractive Text Summarization.
+Phase 3: Extractive Text Summarization.
 
-Provides:
-  - summarize_text()      — full extractive summarizer returning SummaryResult dataclass
-  - extractive_summary()  — backward-compatible string-returning API
-  - frequency_score_sentences() — normalized word frequency sentence scoring
-  - tfidf_score_sentences()     — TF-IDF sentence scoring using scikit-learn
-  - abstractive_summary() — placeholder stub (no external LLM per project constraints)
-  - evaluate_rouge()      — ROUGE evaluation helper using rouge-score
+This module implements two classic, 100% offline extractive summarization methods:
+  1. TF-IDF Sentence Scoring — treats each sentence as a mini-document and scores
+     it based on the mean TF-IDF weights of its constituent terms.
+  2. Normalized Word Frequency — Luhn-style heuristic scoring that normalizes word
+     counts by the maximum document frequency and penalizes empty sentences.
 
-Design Principles (Undergraduate NLP Viva Explainability):
-  1. Complete Transparency: Every sentence score is inspectable and explainable.
-  2. Document Order Preservation: Top-k scored sentences are re-ordered to match
-     their original document sequence so narrative flow is preserved.
-  3. No Fabrication: 100% extractive — all sentences originate directly from the source.
-  4. Robustness: Gracefully handles empty texts, short notes, repeated sentences,
-     and stop-word-only documents without crashing.
+Important Clarifications:
+  - Generative / Transformer Abstractive Summarization is NOT implemented.
+    The `abstractive_summary()` function is an informational notice detailing why
+    generative models were excluded (to guarantee zero hallucination and complete
+    mathematical explainability for an undergraduate NLP viva).
+  - ROUGE Evaluation: When evaluating a summary against the source text, ROUGE
+    measures source content retention and lexical overlap. It serves as an overlap
+    demonstration and is not equivalent to evaluating against a human-written gold summary.
 """
 
 from __future__ import annotations
@@ -289,12 +288,14 @@ def extractive_summary(
     return result.summary_text
 
 
-# ── Abstractive Stub & Evaluation ─────────────────────────────────────────────
+# ── Abstractive Notice Stub & Evaluation ──────────────────────────────────────
 def abstractive_summary(text: str, max_length: int = 150) -> str:
     """
-    Stub for abstractive summarization.
-    Per project constraints, external LLMs and heavyweight transformer models
-    are excluded to maintain local explainability for an undergraduate NLP viva.
+    Informational placeholder notice clarifying project summarization scope.
+    This project deliberately does NOT implement generative or transformer-based
+    abstractive summarization. It strictly implements two transparent, 100% offline
+    extractive algorithms (TF-IDF and Luhn frequency) to guarantee zero hallucination
+    and direct mathematical explainability.
     """
     return (
         "ℹ️ Abstractive summarization via transformer models is disabled "
@@ -306,6 +307,12 @@ def abstractive_summary(text: str, max_length: int = 150) -> str:
 def evaluate_rouge(reference: str, hypothesis: str) -> dict[str, float]:
     """
     Compute ROUGE-1, ROUGE-2, and ROUGE-L F1 scores using rouge-score.
+
+    Note on Methodology:
+    ROUGE scores quantify n-gram recall and longest common subsequence overlap.
+    When comparing a generated summary against the source document, ROUGE measures
+    extractive coverage / content retention. It is not an alternative to evaluating
+    against human-authored gold reference summaries.
     """
     if not reference.strip() or not hypothesis.strip():
         return {"rouge1": 0.0, "rouge2": 0.0, "rougeL": 0.0}
